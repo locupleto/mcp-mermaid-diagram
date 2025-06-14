@@ -149,6 +149,27 @@ async def handle_list_tools() -> list[Tool]:
                         "enum": ["default", "dark", "forest", "base"],
                         "default": "default",
                         "description": "Theme to use for the diagram"
+                    },
+                    "width": {
+                        "type": "integer",
+                        "minimum": 800,
+                        "maximum": 4000,
+                        "default": 1920,
+                        "description": "Width of the output image in pixels"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "minimum": 600,
+                        "maximum": 4000,
+                        "default": 1080,
+                        "description": "Height of the output image in pixels"
+                    },
+                    "scale": {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 4,
+                        "default": 2,
+                        "description": "Scale factor for higher resolution (1-4)"
                     }
                 },
                 "required": ["mermaid_code"]
@@ -178,8 +199,11 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
             raise ValueError("generate_diagram tool requires arguments")
         
         mermaid_code = arguments.get("mermaid_code", "")
-        output_format = arguments.get("format", "svg")
+        output_format = arguments.get("format", "png")
         theme = arguments.get("theme", "default")
+        width = arguments.get("width", 1920)
+        height = arguments.get("height", 1080)
+        scale = arguments.get("scale", 2)
         
         if not mermaid_code:
             raise ValueError("No Mermaid code provided")
@@ -206,13 +230,16 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                 with open(input_path, "w") as f:
                     f.write(extracted_code)
                 
-                # Build the mmdc command
+                # Build the mmdc command with resolution parameters
                 command = [
                     "mmdc",
                     "-q",  # Quiet mode
                     "-i", input_path,
                     "-o", output_path,
-                    "-t", theme
+                    "-t", theme,
+                    "-w", str(width),    # Width
+                    "-H", str(height),   # Height
+                    "-s", str(scale)     # Scale factor
                 ]
                 
                 # Execute the command with timeout

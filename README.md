@@ -85,7 +85,10 @@ You can also directly use the tools:
 {
   "mermaid_code": "flowchart TD\n    A[Start] --> B[End]",
   "format": "png",
-  "theme": "default"
+  "theme": "default",
+  "width": 1920,
+  "height": 1080,
+  "scale": 2
 }
 ```
 
@@ -116,6 +119,31 @@ The server supports all Mermaid diagram types:
 - **PNG** (default): Generates a PNG image file
 - **SVG**: Returns SVG markup that can be embedded
 - **PDF**: Generates a PDF file
+
+## Resolution & Quality Settings
+
+For large or complex diagrams, you can customize the output resolution:
+
+- **width**: Image width in pixels (800-4000, default: 1920)
+- **height**: Image height in pixels (600-4000, default: 1080)
+- **scale**: Scale factor for higher resolution (1-4, default: 2)
+
+### High-Resolution Examples
+```json
+// For very large diagrams
+{
+  "width": 3840,
+  "height": 2160,
+  "scale": 3
+}
+
+// For detailed diagrams
+{
+  "width": 2560,
+  "height": 1440,
+  "scale": 2.5
+}
+```
 
 ## Themes
 

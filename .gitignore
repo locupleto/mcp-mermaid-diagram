@@ -128,3 +128,8 @@ dmypy.json
 .config/app_config.toml
 .config/elements/
 
+# Generated diagram files
+mermaid_diagram_*.png
+mermaid_diagram_*.svg
+mermaid_diagram_*.pdf
+
