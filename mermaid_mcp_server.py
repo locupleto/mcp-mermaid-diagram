@@ -22,8 +22,7 @@ from mcp.server.models import InitializationOptions
 from mcp.server import NotificationOptions, Server
 from mcp.server.stdio import stdio_server
 from mcp.types import Resource, Tool, TextContent
-from typing import Any, Sequence
-import mcp.types as types
+from typing import Any
 
 server = Server("mermaid-diagram")
 

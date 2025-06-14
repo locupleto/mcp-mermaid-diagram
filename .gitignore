@@ -128,24 +128,3 @@ dmypy.json
 .config/app_config.toml
 .config/elements/
 
-# chat histories
-trading_chat_history/
-developer_chat_history/
-research_chat_history/
-web_chat_history/
-chat_chat_history/
-
-# documents (research assistant)
-research_documents/
-developer_docs/
-
-# Wikipedia stock index constituents
-market_indexes/
-optimization_results
-
-# Decision trees
-decision_tree_artifacts
-
-# for now the README file
-README.md
-
