@@ -154,11 +154,12 @@ For large or complex diagrams, you can customize the output resolution:
 - **base**: Minimal base theme
 
 ### Theme Recommendations:
-- **GitHub Light Mode**: Use `theme: "default"` with `backgroundColor: "transparent"`
-- **GitHub Dark Mode**: Use `theme: "default"` with `backgroundColor: "transparent"` (adapts to GitHub's theme)
-- **Custom Dark Backgrounds**: Use `theme: "default"` with your preferred background color
+- **Light Environments (GitHub Light, IDEs with light themes)**: Use `theme: "default"` 
+- **Dark Environments (GitHub Dark Mode, IDEs with dark themes)**: Use `theme: "dark"`
+- **GitHub Universal Compatibility**: Use `theme: "default"` with transparent background (adapts automatically)
+- **Custom Backgrounds**: Use any theme with your preferred `backgroundColor`
 
-Note: The "dark" theme is experimental and may not work perfectly in all cases. For best GitHub compatibility, use "default" theme with transparent background.
+The "dark" theme uses light foreground colors (light grey text/lines) optimized for dark backgrounds, while "default" uses dark colors for light backgrounds.
 
 ## Background Colors
 
