@@ -253,7 +253,7 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     "-w", str(width),    # Width
                     "-H", str(height),   # Height
                     "-s", str(scale),    # Scale factor
-                    "-b", background_color  # Background color
+                    "--backgroundColor", background_color  # Background color
                 ]
                 
                 # Handle dark theme with custom configuration for light foreground colors
@@ -317,16 +317,43 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     permanent_filename = f"{file_name}.{output_format}"
                     permanent_path = os.path.join(os.getcwd(), permanent_filename)
                     
-                    # Save to the user-specified filename
-                    with open(permanent_path, "wb") as f:
-                        f.write(file_content)
+                    # Save to the user-specified filename with error handling
+                    try:
+                        with open(permanent_path, "wb") as f:
+                            f.write(file_content)
+                        
+                        # Verify the file was actually written
+                        if not os.path.exists(permanent_path):
+                            raise Exception(f"File was not created at {permanent_path}")
+                        
+                        # Get actual file size for verification
+                        actual_size = os.path.getsize(permanent_path)
+                        if actual_size != len(file_content):
+                            raise Exception(f"File size mismatch: expected {len(file_content)}, got {actual_size}")
+                            
+                    except Exception as e:
+                        return [
+                            TextContent(
+                                type="text",
+                                text=f"Error saving file to {permanent_path}: {str(e)}"
+                            )
+                        ]
                     
                     if output_format == "svg":
+                        # For SVG, handle transparent background by modifying the content
+                        svg_content = file_content.decode('utf-8')
+                        if background_color == "transparent":
+                            # Remove background-color: white; from the SVG style
+                            svg_content = svg_content.replace('background-color: white;', 'background-color: transparent;')
+                            # Also save the corrected content
+                            with open(permanent_path, "w", encoding="utf-8") as f:
+                                f.write(svg_content)
+                        
                         # For SVG, save the file AND return the content for embedding
                         return [
                             TextContent(
                                 type="text",
-                                text=f"Successfully generated SVG diagram and saved to: {permanent_path}\n\nFile size: {len(file_content)} bytes\n\nSVG Content:\n\n{file_content.decode('utf-8')}"
+                                text=f"Successfully generated SVG diagram and saved to: {permanent_path}\n\nWorking directory: {os.getcwd()}\nFile size: {len(svg_content.encode('utf-8'))} bytes\nFile exists: {os.path.exists(permanent_path)}\n\nSVG Content:\n\n{svg_content}"
                             )
                         ]
                     else:
