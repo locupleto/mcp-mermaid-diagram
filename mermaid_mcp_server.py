@@ -147,7 +147,7 @@ async def handle_list_tools() -> list[Tool]:
                     "theme": {
                         "type": "string",
                         "enum": ["default", "dark", "forest", "base"],
-                        "default": "dark",
+                        "default": "default",
                         "description": "Theme to use for the diagram"
                     },
                     "width": {
@@ -173,7 +173,7 @@ async def handle_list_tools() -> list[Tool]:
                     },
                     "backgroundColor": {
                         "type": "string",
-                        "default": "#0d1117",
+                        "default": "transparent",
                         "description": "Background color for the diagram (hex color, named color, or 'transparent')"
                     }
                 },
@@ -205,11 +205,11 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
         
         mermaid_code = arguments.get("mermaid_code", "")
         output_format = arguments.get("format", "svg")
-        theme = arguments.get("theme", "dark")
+        theme = arguments.get("theme", "default")
         width = arguments.get("width", 1920)
         height = arguments.get("height", 1080)
         scale = arguments.get("scale", 2)
-        background_color = arguments.get("backgroundColor", "#0d1117")
+        background_color = arguments.get("backgroundColor", "transparent")
         
         if not mermaid_code:
             raise ValueError("No Mermaid code provided")

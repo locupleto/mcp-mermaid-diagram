@@ -85,11 +85,11 @@ You can also directly use the tools:
 {
   "mermaid_code": "flowchart TD\n    A[Start] --> B[End]",
   "format": "svg",
-  "theme": "dark",
+  "theme": "default",
   "width": 1920,
   "height": 1080,
   "scale": 2,
-  "backgroundColor": "#0d1117"
+  "backgroundColor": "transparent"
 }
 ```
 
@@ -148,18 +148,18 @@ For large or complex diagrams, you can customize the output resolution:
 
 ## Themes
 
-- **dark** (default): Dark mode theme with GitHub dark background
-- **default**: Standard Mermaid theme
+- **default** (default): Standard Mermaid theme with transparent background
+- **dark**: Dark mode theme  
 - **forest**: Green/forest theme
 - **base**: Minimal base theme
 
 ## Background Colors
 
-The default background color is `#0d1117` (GitHub dark theme background) which works well with the dark theme. You can customize this using the `backgroundColor` parameter:
+The default background color is `transparent` which adapts to your viewing environment (like GitHub's dark/light theme). You can customize this using the `backgroundColor` parameter:
 
-- **#0d1117** (default): GitHub dark theme background
-- **transparent**: No background (adapts to container)
+- **transparent** (default): No background (adapts to container theme)
 - **white**: White background for light themes
+- **#0d1117**: GitHub dark theme background
 - **#1f2020**: Mermaid dark theme background
 - Custom hex colors (e.g., `#333333`)
 
