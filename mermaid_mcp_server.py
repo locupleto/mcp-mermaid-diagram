@@ -146,7 +146,7 @@ async def handle_list_tools() -> list[Tool]:
                     },
                     "theme": {
                         "type": "string",
-                        "enum": ["default", "dark", "forest", "base"],
+                        "enum": ["default", "dark", "forest", "neutral"],
                         "default": "default",
                         "description": "Theme to use for the diagram"
                     },
@@ -256,39 +256,12 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     "--backgroundColor", background_color  # Background color
                 ]
                 
-                # Handle dark theme with custom configuration for light foreground colors
-                if theme == "dark":
-                    # Create custom dark theme configuration (GitHub dark theme colors)
-                    config_path = os.path.join(tmpdirname, "dark_theme_config.json")
-                    config = {
-                        "theme": "base",
-                        "themeVariables": {
-                            "primaryTextColor": "#c9d1d9",
-                            "primaryBorderColor": "#c9d1d9",
-                            "lineColor": "#c9d1d9",
-                            "actorBorder": "#c9d1d9",
-                            "actorTextColor": "#c9d1d9",
-                            "actorLineColor": "#c9d1d9",
-                            "signalColor": "#c9d1d9",
-                            "signalTextColor": "#c9d1d9",
-                            "labelBoxBorderColor": "#c9d1d9",
-                            "labelTextColor": "#c9d1d9",
-                            "loopTextColor": "#c9d1d9",
-                            "noteBorderColor": "#c9d1d9",
-                            "noteTextColor": "#c9d1d9",
-                            "activationBorderColor": "#c9d1d9",
-                            "sequenceNumberColor": "#c9d1d9"
-                        }
-                    }
-                    
-                    import json
-                    with open(config_path, "w") as f:
-                        json.dump(config, f)
-                    
-                    # Use base theme with custom dark configuration
-                    command.extend(["-t", "base", "-c", config_path])
+                # Handle dark theme styling - make "default" theme dark, and "dark" theme extra dark
+                if theme == "default" or theme == "dark":
+                    # Use the built-in dark theme as the base, which should work with most mermaid CLI versions
+                    command.extend(["-t", "dark"])
                 else:
-                    # Use the specified theme normally
+                    # Use the specified theme normally (forest, neutral, etc.)
                     command.extend(["-t", theme])
                 
                 # Execute the command with timeout
@@ -304,7 +277,7 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     return [
                         TextContent(
                             type="text",
-                            text=f"Failed to generate diagram. Error: {result.stderr}"
+                            text=f"UPDATED VERSION: Failed to generate diagram. Error: {result.stderr}"
                         )
                     ]
                 
