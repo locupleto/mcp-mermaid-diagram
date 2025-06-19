@@ -170,6 +170,11 @@ async def handle_list_tools() -> list[Tool]:
                         "maximum": 4,
                         "default": 2,
                         "description": "Scale factor for higher resolution (1-4)"
+                    },
+                    "backgroundColor": {
+                        "type": "string",
+                        "default": "#0d1117",
+                        "description": "Background color for the diagram (hex color, named color, or 'transparent')"
                     }
                 },
                 "required": ["mermaid_code"]
@@ -204,6 +209,7 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
         width = arguments.get("width", 1920)
         height = arguments.get("height", 1080)
         scale = arguments.get("scale", 2)
+        background_color = arguments.get("backgroundColor", "#0d1117")
         
         if not mermaid_code:
             raise ValueError("No Mermaid code provided")
@@ -239,7 +245,8 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     "-t", theme,
                     "-w", str(width),    # Width
                     "-H", str(height),   # Height
-                    "-s", str(scale)     # Scale factor
+                    "-s", str(scale),    # Scale factor
+                    "-b", background_color  # Background color
                 ]
                 
                 # Execute the command with timeout

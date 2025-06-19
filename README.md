@@ -88,7 +88,8 @@ You can also directly use the tools:
   "theme": "dark",
   "width": 1920,
   "height": 1080,
-  "scale": 2
+  "scale": 2,
+  "backgroundColor": "#0d1117"
 }
 ```
 
@@ -147,10 +148,20 @@ For large or complex diagrams, you can customize the output resolution:
 
 ## Themes
 
-- **dark** (default): Dark mode theme
+- **dark** (default): Dark mode theme with GitHub dark background
 - **default**: Standard Mermaid theme
 - **forest**: Green/forest theme
 - **base**: Minimal base theme
+
+## Background Colors
+
+The default background color is `#0d1117` (GitHub dark theme background) which works well with the dark theme. You can customize this using the `backgroundColor` parameter:
+
+- **#0d1117** (default): GitHub dark theme background
+- **transparent**: No background (adapts to container)
+- **white**: White background for light themes
+- **#1f2020**: Mermaid dark theme background
+- Custom hex colors (e.g., `#333333`)
 
 ## Examples
 
