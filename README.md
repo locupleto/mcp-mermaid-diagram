@@ -84,7 +84,7 @@ You can also directly use the tools:
 ```json
 {
   "mermaid_code": "flowchart TD\n    A[Start] --> B[End]",
-  "format": "png",
+  "format": "svg",
   "theme": "default",
   "width": 1920,
   "height": 1080,
@@ -116,8 +116,8 @@ The server supports all Mermaid diagram types:
 
 ## Output Formats
 
-- **PNG** (default): Generates a PNG image file
-- **SVG**: Returns SVG markup that can be embedded
+- **SVG** (default): Returns SVG markup that can be embedded
+- **PNG**: Generates a PNG image file
 - **PDF**: Generates a PDF file
 
 ## Resolution & Quality Settings
