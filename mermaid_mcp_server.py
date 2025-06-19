@@ -141,7 +141,7 @@ async def handle_list_tools() -> list[Tool]:
                     "format": {
                         "type": "string",
                         "enum": ["svg", "png", "pdf"],
-                        "default": "png",
+                        "default": "svg",
                         "description": "Output format for the diagram"
                     },
                     "theme": {
@@ -199,7 +199,7 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
             raise ValueError("generate_diagram tool requires arguments")
         
         mermaid_code = arguments.get("mermaid_code", "")
-        output_format = arguments.get("format", "png")
+        output_format = arguments.get("format", "svg")
         theme = arguments.get("theme", "default")
         width = arguments.get("width", 1920)
         height = arguments.get("height", 1080)
