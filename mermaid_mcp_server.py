@@ -175,9 +175,13 @@ async def handle_list_tools() -> list[Tool]:
                         "type": "string",
                         "default": "transparent",
                         "description": "Background color for the diagram (hex color, named color, or 'transparent')"
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "description": "Name of the output file (without extension, will be added automatically based on format)"
                     }
                 },
-                "required": ["mermaid_code"]
+                "required": ["mermaid_code", "file_name"]
             }
         ),
         Tool(
@@ -210,9 +214,13 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
         height = arguments.get("height", 1080)
         scale = arguments.get("scale", 2)
         background_color = arguments.get("backgroundColor", "transparent")
+        file_name = arguments.get("file_name", "")
         
         if not mermaid_code:
             raise ValueError("No Mermaid code provided")
+        
+        if not file_name:
+            raise ValueError("No file name provided")
         
         # Extract code from text if it contains code blocks
         extracted_code = extract_mermaid_code(mermaid_code)
@@ -300,30 +308,29 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                         )
                     ]
                 
-                # Read the generated file and handle different formats
+                # Read the generated file and save to specified filename
                 if os.path.exists(output_path):
                     with open(output_path, "rb") as f:
                         file_content = f.read()
                     
+                    # Create the permanent filename with proper extension
+                    permanent_filename = f"{file_name}.{output_format}"
+                    permanent_path = os.path.join(os.getcwd(), permanent_filename)
+                    
+                    # Save to the user-specified filename
+                    with open(permanent_path, "wb") as f:
+                        f.write(file_content)
+                    
                     if output_format == "svg":
-                        # For SVG, return the content directly for embedding
+                        # For SVG, save the file AND return the content for embedding
                         return [
                             TextContent(
                                 type="text",
-                                text=f"Successfully generated SVG diagram:\n\n{file_content.decode('utf-8')}"
+                                text=f"Successfully generated SVG diagram and saved to: {permanent_path}\n\nFile size: {len(file_content)} bytes\n\nSVG Content:\n\n{file_content.decode('utf-8')}"
                             )
                         ]
                     else:
-                        # For binary formats (PNG, PDF), save to a permanent location and provide path
-                        import time
-                        timestamp = int(time.time())
-                        permanent_filename = f"mermaid_diagram_{timestamp}.{output_format}"
-                        permanent_path = os.path.join(os.getcwd(), permanent_filename)
-                        
-                        # Copy the file to permanent location
-                        with open(permanent_path, "wb") as f:
-                            f.write(file_content)
-                        
+                        # For binary formats (PNG, PDF), just provide the saved file path
                         return [
                             TextContent(
                                 type="text",
