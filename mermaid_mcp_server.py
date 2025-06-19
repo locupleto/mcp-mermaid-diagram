@@ -250,39 +250,32 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                 
                 # Handle dark theme with custom configuration for light foreground colors
                 if theme == "dark":
-                    # Create custom dark theme configuration
+                    # Create custom dark theme configuration (GitHub dark theme colors)
                     config_path = os.path.join(tmpdirname, "dark_theme_config.json")
                     config = {
                         "theme": "base",
                         "themeVariables": {
-                            "darkMode": True,
-                            "background": "transparent",
-                            "primaryColor": "#21262d",
                             "primaryTextColor": "#c9d1d9",
                             "primaryBorderColor": "#c9d1d9",
                             "lineColor": "#c9d1d9",
-                            "actorBkg": "#21262d",
                             "actorBorder": "#c9d1d9",
                             "actorTextColor": "#c9d1d9",
                             "actorLineColor": "#c9d1d9",
                             "signalColor": "#c9d1d9",
                             "signalTextColor": "#c9d1d9",
-                            "labelBoxBkgColor": "#21262d",
                             "labelBoxBorderColor": "#c9d1d9",
                             "labelTextColor": "#c9d1d9",
                             "loopTextColor": "#c9d1d9",
                             "noteBorderColor": "#c9d1d9",
-                            "noteBkgColor": "#21262d",
                             "noteTextColor": "#c9d1d9",
                             "activationBorderColor": "#c9d1d9",
-                            "activationBkgColor": "#21262d",
                             "sequenceNumberColor": "#c9d1d9"
                         }
                     }
                     
                     import json
                     with open(config_path, "w") as f:
-                        json.dump(config, f, indent=2)
+                        json.dump(config, f)
                     
                     # Use base theme with custom dark configuration
                     command.extend(["-t", "base", "-c", config_path])
