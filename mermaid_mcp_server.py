@@ -242,12 +242,53 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     "-q",  # Quiet mode
                     "-i", input_path,
                     "-o", output_path,
-                    "-t", theme,
                     "-w", str(width),    # Width
                     "-H", str(height),   # Height
                     "-s", str(scale),    # Scale factor
                     "-b", background_color  # Background color
                 ]
+                
+                # Handle dark theme with custom configuration for light foreground colors
+                if theme == "dark":
+                    # Create custom dark theme configuration
+                    config_path = os.path.join(tmpdirname, "dark_theme_config.json")
+                    config = {
+                        "theme": "base",
+                        "themeVariables": {
+                            "darkMode": True,
+                            "background": "transparent",
+                            "primaryColor": "#21262d",
+                            "primaryTextColor": "#c9d1d9",
+                            "primaryBorderColor": "#c9d1d9",
+                            "lineColor": "#c9d1d9",
+                            "actorBkg": "#21262d",
+                            "actorBorder": "#c9d1d9",
+                            "actorTextColor": "#c9d1d9",
+                            "actorLineColor": "#c9d1d9",
+                            "signalColor": "#c9d1d9",
+                            "signalTextColor": "#c9d1d9",
+                            "labelBoxBkgColor": "#21262d",
+                            "labelBoxBorderColor": "#c9d1d9",
+                            "labelTextColor": "#c9d1d9",
+                            "loopTextColor": "#c9d1d9",
+                            "noteBorderColor": "#c9d1d9",
+                            "noteBkgColor": "#21262d",
+                            "noteTextColor": "#c9d1d9",
+                            "activationBorderColor": "#c9d1d9",
+                            "activationBkgColor": "#21262d",
+                            "sequenceNumberColor": "#c9d1d9"
+                        }
+                    }
+                    
+                    import json
+                    with open(config_path, "w") as f:
+                        json.dump(config, f, indent=2)
+                    
+                    # Use base theme with custom dark configuration
+                    command.extend(["-t", "base", "-c", config_path])
+                else:
+                    # Use the specified theme normally
+                    command.extend(["-t", theme])
                 
                 # Execute the command with timeout
                 result = subprocess.run(

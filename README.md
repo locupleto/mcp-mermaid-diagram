@@ -148,10 +148,17 @@ For large or complex diagrams, you can customize the output resolution:
 
 ## Themes
 
-- **default** (default): Standard Mermaid theme with transparent background
-- **dark**: Dark mode theme  
+- **default** (default): Standard theme with dark text/lines (good for light backgrounds)
+- **dark**: Custom dark theme with light text/lines (perfect for GitHub dark mode)
 - **forest**: Green/forest theme
 - **base**: Minimal base theme
+
+### Theme Recommendations:
+- **GitHub Light Mode**: Use `theme: "default"` with `backgroundColor: "transparent"`
+- **GitHub Dark Mode**: Use `theme: "default"` with `backgroundColor: "transparent"` (adapts to GitHub's theme)
+- **Custom Dark Backgrounds**: Use `theme: "default"` with your preferred background color
+
+Note: The "dark" theme is experimental and may not work perfectly in all cases. For best GitHub compatibility, use "default" theme with transparent background.
 
 ## Background Colors
 
