@@ -85,7 +85,7 @@ You can also directly use the tools:
 {
   "mermaid_code": "flowchart TD\n    A[Start] --> B[End]",
   "format": "svg",
-  "theme": "default",
+  "theme": "dark",
   "width": 1920,
   "height": 1080,
   "scale": 2
@@ -147,8 +147,8 @@ For large or complex diagrams, you can customize the output resolution:
 
 ## Themes
 
+- **dark** (default): Dark mode theme
 - **default**: Standard Mermaid theme
-- **dark**: Dark mode theme
 - **forest**: Green/forest theme
 - **base**: Minimal base theme
 
