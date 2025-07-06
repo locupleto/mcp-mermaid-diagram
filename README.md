@@ -29,7 +29,14 @@ mmdc --version
 ```
 
 ### 3. Install MCP Python SDK
-Install the MCP Python SDK:
+It's recommended to create a virtual environment first:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+Then install the MCP Python SDK:
 
 ```bash
 pip install mcp
@@ -45,14 +52,14 @@ pip install mcp
 
 2. **Add the MCP server to Claude Code:**
    ```bash
-   claude mcp add mermaid-diagram python '/path/to/mermaid_mcp_server.py'
+   claude mcp add mermaid-diagram python '/full-path-to/mermaid_mcp_server.py'
    ```
    
-   Replace `/path/to/mermaid_mcp_server.py` with the actual path to the server file.
+   Replace `/full-path-to/mermaid_mcp_server.py` with the actual full path to the server file. Note that tilde (`~`) expansion doesn't work here, so you must use the complete absolute path.
 
    For user-level (global) configuration:
    ```bash
-   claude mcp add -s user mermaid-diagram python '/path/to/mermaid_mcp_server.py'
+   claude mcp add -s user mermaid-diagram python '/full-path-to/mermaid_mcp_server.py'
    ```
 
 3. **Verify the installation:**
