@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 # Setup Requirements:
-# 1. Install MCP Python SDK:
+# 1. Install MCP Python SDK (in a venv):
+#    python3 -m venv venv
+#    source venv/bin/activate
 #    pip install mcp
 # 2. Install Mermaid CLI:
 #    npm install -g @mermaid-js/mermaid-cli
-# 3. Add to Claude Code:
-#    claude mcp add mermaid-diagram python '/path/to/mermaid_mcp_server.py'
-#    # For user-level (global) config:
-#    claude mcp add -s user mermaid-diagram python '/path/to/mermaid_mcp_server.py'
+# 3. Add to Claude Code (use absolute paths to ensure it works from any project):
+#    claude mcp add -s user mermaid-diagram '/path/to/venv/bin/python3' '/path/to/mermaid_mcp_server.py'
 # 4. Verify it's working:
 #    claude mcp list
 #    claude --mcp-debug  # if troubleshooting needed

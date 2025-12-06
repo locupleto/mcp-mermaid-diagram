@@ -52,14 +52,14 @@ pip install mcp
 
 2. **Add the MCP server to Claude Code:**
    ```bash
-   claude mcp add mermaid-diagram python '/full-path-to/mermaid_mcp_server.py'
+   claude mcp add -s user mermaid-diagram '/full-path-to/venv/bin/python3' '/full-path-to/mermaid_mcp_server.py'
    ```
-   
-   Replace `/full-path-to/mermaid_mcp_server.py` with the actual full path to the server file. Note that tilde (`~`) expansion doesn't work here, so you must use the complete absolute path.
 
-   For user-level (global) configuration:
+   Replace the paths with actual full paths. **Important:** Use the absolute path to the venv's Python interpreter to ensure the `mcp` package is available regardless of which project you're working in.
+
+   Example:
    ```bash
-   claude mcp add -s user mermaid-diagram python '/full-path-to/mermaid_mcp_server.py'
+   claude mcp add -s user mermaid-diagram '/Users/yourname/mcp-mermaid-diagram/venv/bin/python3' '/Users/yourname/mcp-mermaid-diagram/mermaid_mcp_server.py'
    ```
 
 3. **Verify the installation:**
