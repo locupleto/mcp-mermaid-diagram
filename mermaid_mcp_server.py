@@ -59,13 +59,42 @@ def extract_mermaid_code(text: str) -> str:
     """
     # First try to extract from code blocks
     code_block_matches = re.findall(r"```(?:\w*\n)?(.*?)```", text, re.DOTALL)
-    
+
     if code_block_matches:
         # Return the first code block
         return code_block_matches[0].strip()
-    
+
     # If no code blocks, return the text as-is
     return text.strip()
+
+
+def sanitize_markdown_in_labels(code: str) -> str:
+    """
+    Sanitize text inside node labels to prevent mermaid from interpreting
+    content as markdown lists (e.g., "1. Something" or "- Something").
+
+    This replaces patterns that look like markdown lists inside quoted labels:
+    - "1. Text" becomes "1: Text"
+    - "- Text" becomes "– Text" (en-dash)
+    - "<br/>" becomes newline character for proper line breaks
+    """
+    # Find all quoted strings (node labels) and sanitize them
+    def sanitize_label(match):
+        label = match.group(1)
+        # Replace numbered list patterns: "1. " -> "1: "
+        label = re.sub(r'(\d+)\. ', r'\1: ', label)
+        # Replace dash list patterns: "- " -> "– " (en-dash)
+        label = re.sub(r'^- ', '– ', label)
+        label = re.sub(r'\n- ', '\n– ', label)
+        # Replace <br/> with actual line break for mermaid
+        label = label.replace('<br/>', '\\n')
+        label = label.replace('<br>', '\\n')
+        return f'["{label}"]'
+
+    # Match node labels in square brackets with quotes: ["..."]
+    code = re.sub(r'\["([^"]+)"\]', sanitize_label, code)
+
+    return code
 
 @server.list_resources()
 async def handle_list_resources() -> list[Resource]:
@@ -224,7 +253,10 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
         
         # Extract code from text if it contains code blocks
         extracted_code = extract_mermaid_code(mermaid_code)
-        
+
+        # Sanitize markdown patterns in labels to prevent rendering issues
+        extracted_code = sanitize_markdown_in_labels(extracted_code)
+
         # Validate that it looks like Mermaid code
         if not appears_to_be_mermaid_code(extracted_code):
             return [
@@ -267,30 +299,30 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                             "primaryColor": "#3b82f6",      # Blue boxes
                             "primaryTextColor": "#ffffff",   # White text on primary
                             "primaryBorderColor": "#60a5fa",
-                            "secondaryColor": "#475569",     # Slate gray secondary
+                            "secondaryColor": "#374151",     # Gray secondary
                             "secondaryTextColor": "#ffffff",
-                            "secondaryBorderColor": "#64748b",
-                            "tertiaryColor": "#334155",      # Dark slate tertiary
+                            "secondaryBorderColor": "#4b5563",
+                            "tertiaryColor": "#1f2937",      # Dark gray tertiary
                             "tertiaryTextColor": "#ffffff",
-                            "background": "#1e293b",         # Dark background
-                            "mainBkg": "#334155",            # Main box background
-                            "textColor": "#f1f5f9",          # Light text
-                            "lineColor": "#94a3b8",          # Gray lines
+                            "background": "#000000",         # Black background
+                            "mainBkg": "#1f2937",            # Dark gray box background
+                            "textColor": "#f9fafb",          # Light text
+                            "lineColor": "#6b7280",          # Gray lines
                             "nodeTextColor": "#ffffff",      # White node text
                             "nodeBorder": "#60a5fa",
-                            "clusterBkg": "#1e293b",
-                            "clusterBorder": "#475569",
-                            "titleColor": "#f1f5f9",
-                            "edgeLabelBackground": "#334155",
+                            "clusterBkg": "#000000",         # Black cluster background
+                            "clusterBorder": "#374151",
+                            "titleColor": "#f9fafb",
+                            "edgeLabelBackground": "#1f2937",
                             "actorBkg": "#3b82f6",
                             "actorTextColor": "#ffffff",
                             "actorBorder": "#60a5fa",
-                            "actorLineColor": "#94a3b8",
-                            "labelBoxBkgColor": "#334155",
-                            "labelBoxBorderColor": "#64748b",
-                            "labelTextColor": "#f1f5f9",
+                            "actorLineColor": "#6b7280",
+                            "labelBoxBkgColor": "#1f2937",
+                            "labelBoxBorderColor": "#4b5563",
+                            "labelTextColor": "#f9fafb",
                             "noteBkgColor": "#fbbf24",       # Amber notes
-                            "noteTextColor": "#1e293b",      # Dark text on notes
+                            "noteTextColor": "#000000",      # Black text on notes
                             "noteBorderColor": "#f59e0b"
                         }
                     }
