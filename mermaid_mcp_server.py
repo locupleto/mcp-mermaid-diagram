@@ -255,11 +255,48 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     "-s", str(scale),    # Scale factor
                     "--backgroundColor", background_color  # Background color
                 ]
-                
-                # Handle dark theme styling - make "default" theme dark, and "dark" theme extra dark
+
+                # Handle dark theme styling with custom config for good contrast
                 if theme == "default" or theme == "dark":
-                    # Use the built-in dark theme as the base, which should work with most mermaid CLI versions
-                    command.extend(["-t", "dark"])
+                    # Create a custom dark theme config with good contrast
+                    import json
+                    config_path = os.path.join(tmpdirname, "config.json")
+                    dark_config = {
+                        "theme": "base",
+                        "themeVariables": {
+                            "primaryColor": "#3b82f6",      # Blue boxes
+                            "primaryTextColor": "#ffffff",   # White text on primary
+                            "primaryBorderColor": "#60a5fa",
+                            "secondaryColor": "#475569",     # Slate gray secondary
+                            "secondaryTextColor": "#ffffff",
+                            "secondaryBorderColor": "#64748b",
+                            "tertiaryColor": "#334155",      # Dark slate tertiary
+                            "tertiaryTextColor": "#ffffff",
+                            "background": "#1e293b",         # Dark background
+                            "mainBkg": "#334155",            # Main box background
+                            "textColor": "#f1f5f9",          # Light text
+                            "lineColor": "#94a3b8",          # Gray lines
+                            "nodeTextColor": "#ffffff",      # White node text
+                            "nodeBorder": "#60a5fa",
+                            "clusterBkg": "#1e293b",
+                            "clusterBorder": "#475569",
+                            "titleColor": "#f1f5f9",
+                            "edgeLabelBackground": "#334155",
+                            "actorBkg": "#3b82f6",
+                            "actorTextColor": "#ffffff",
+                            "actorBorder": "#60a5fa",
+                            "actorLineColor": "#94a3b8",
+                            "labelBoxBkgColor": "#334155",
+                            "labelBoxBorderColor": "#64748b",
+                            "labelTextColor": "#f1f5f9",
+                            "noteBkgColor": "#fbbf24",       # Amber notes
+                            "noteTextColor": "#1e293b",      # Dark text on notes
+                            "noteBorderColor": "#f59e0b"
+                        }
+                    }
+                    with open(config_path, "w") as f:
+                        json.dump(dark_config, f)
+                    command.extend(["--configFile", config_path])
                 else:
                     # Use the specified theme normally (forest, neutral, etc.)
                     command.extend(["-t", theme])
@@ -303,7 +340,12 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                         actual_size = os.path.getsize(permanent_path)
                         if actual_size != len(file_content):
                             raise Exception(f"File size mismatch: expected {len(file_content)}, got {actual_size}")
-                            
+
+                        # Auto-open the file on macOS
+                        import platform
+                        if platform.system() == "Darwin":
+                            subprocess.run(["open", permanent_path], check=False)
+
                     except Exception as e:
                         return [
                             TextContent(
