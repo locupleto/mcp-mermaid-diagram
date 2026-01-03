@@ -288,41 +288,94 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                     "--backgroundColor", background_color  # Background color
                 ]
 
-                # Handle dark theme styling with custom config for good contrast
-                if theme == "default" or theme == "dark":
-                    # Create a custom dark theme config with good contrast
+                # Handle theme styling to match user's professional color palette
+                # Based on infrastructure-diagram.md preferences:
+                # - Darker, muted colors (not bright pastels)
+                # - Professional appearance matching Trading Lab branding
+                # - Good contrast while maintaining subdued tones
+                if theme == "default":
+                    # Professional theme matching Trading Lab style guide
+                    # Colors from infrastructure-diagram.md:
+                    # Production: #2d5016 (dark green) / #4a7c2f (green stroke)
+                    # Development: #1a4d7a (dark blue) / #2e7db8 (blue stroke)
+                    # VPS: #7a4d1a (brown-orange) / #b87a2e (orange stroke)
+                    # Mobile: #4d1a4d (dark purple) / #7a2e7a (purple stroke)
+                    # Database: #1a1a4d (navy) / #2e2e7a (navy stroke)
+                    # External: #4d1a1a (dark red) / #7a2e2e (red stroke)
+                    import json
+                    config_path = os.path.join(tmpdirname, "config.json")
+                    professional_config = {
+                        "theme": "base",
+                        "themeVariables": {
+                            "primaryColor": "#1a4d7a",        # Development blue (primary boxes)
+                            "primaryTextColor": "#ffffff",    # White text for contrast
+                            "primaryBorderColor": "#2e7db8",  # Lighter blue border
+                            "secondaryColor": "#2d5016",      # Production green (secondary)
+                            "secondaryTextColor": "#ffffff",  # White text
+                            "secondaryBorderColor": "#4a7c2f", # Lighter green border
+                            "tertiaryColor": "#7a4d1a",       # VPS orange (tertiary)
+                            "tertiaryTextColor": "#ffffff",   # White text
+                            "tertiaryBorderColor": "#b87a2e", # Lighter orange border
+                            "background": "#ffffff",          # White background (light mode)
+                            "mainBkg": "#1a4d7a",             # Development blue for main boxes
+                            "textColor": "#1f2937",           # Dark gray for general text
+                            "lineColor": "#6b7280",           # Gray for connection lines
+                            "nodeTextColor": "#ffffff",       # White text in nodes
+                            "nodeBorder": "#2e7db8",          # Blue node borders
+                            "clusterBkg": "#f9fafb",          # Very light gray cluster background
+                            "clusterBorder": "#6b7280",       # Gray cluster borders
+                            "titleColor": "#1f2937",          # Dark gray titles
+                            "edgeLabelBackground": "#ffffff", # White edge label background
+                            "actorBkg": "#4d1a4d",            # Mobile purple for actors
+                            "actorTextColor": "#ffffff",      # White text on actors
+                            "actorBorder": "#7a2e7a",         # Lighter purple border
+                            "actorLineColor": "#6b7280",      # Gray actor lines
+                            "labelBoxBkgColor": "#f3f4f6",    # Light gray label boxes
+                            "labelBoxBorderColor": "#9ca3af", # Medium gray borders
+                            "labelTextColor": "#1f2937",      # Dark gray label text
+                            "noteBkgColor": "#fef3c7",        # Light amber notes
+                            "noteTextColor": "#78350f",       # Dark amber text on notes
+                            "noteBorderColor": "#fbbf24"      # Amber note borders
+                        }
+                    }
+                    with open(config_path, "w") as f:
+                        json.dump(professional_config, f)
+                    command.extend(["--configFile", config_path])
+                elif theme == "dark":
+                    # Dark mode variant (if needed) - still uses professional colors
                     import json
                     config_path = os.path.join(tmpdirname, "config.json")
                     dark_config = {
                         "theme": "base",
                         "themeVariables": {
-                            "primaryColor": "#3b82f6",      # Blue boxes
-                            "primaryTextColor": "#ffffff",   # White text on primary
+                            "primaryColor": "#2e7db8",        # Lighter blue for dark mode
+                            "primaryTextColor": "#ffffff",
                             "primaryBorderColor": "#60a5fa",
-                            "secondaryColor": "#374151",     # Gray secondary
+                            "secondaryColor": "#4a7c2f",      # Lighter green for dark mode
                             "secondaryTextColor": "#ffffff",
-                            "secondaryBorderColor": "#4b5563",
-                            "tertiaryColor": "#1f2937",      # Dark gray tertiary
+                            "secondaryBorderColor": "#86efac",
+                            "tertiaryColor": "#b87a2e",       # Lighter orange for dark mode
                             "tertiaryTextColor": "#ffffff",
-                            "background": "#000000",         # Black background
-                            "mainBkg": "#1f2937",            # Dark gray box background
-                            "textColor": "#f9fafb",          # Light text
-                            "lineColor": "#6b7280",          # Gray lines
-                            "nodeTextColor": "#ffffff",      # White node text
-                            "nodeBorder": "#60a5fa",
-                            "clusterBkg": "#000000",         # Black cluster background
-                            "clusterBorder": "#374151",
-                            "titleColor": "#f9fafb",
-                            "edgeLabelBackground": "#1f2937",
-                            "actorBkg": "#3b82f6",
+                            "tertiaryBorderColor": "#fbbf24",
+                            "background": "#000000",          # Black background
+                            "mainBkg": "#1f2937",             # Dark gray box background
+                            "textColor": "#f9fafb",           # Light text
+                            "lineColor": "#6b7280",           # Gray lines
+                            "nodeTextColor": "#ffffff",       # White node text
+                            "nodeBorder": "#60a5fa",          # Light blue borders
+                            "clusterBkg": "#111827",          # Very dark gray cluster background
+                            "clusterBorder": "#374151",       # Dark gray cluster borders
+                            "titleColor": "#f9fafb",          # Light titles
+                            "edgeLabelBackground": "#1f2937", # Dark gray edge labels
+                            "actorBkg": "#7a2e7a",            # Lighter purple for actors
                             "actorTextColor": "#ffffff",
-                            "actorBorder": "#60a5fa",
+                            "actorBorder": "#c084fc",
                             "actorLineColor": "#6b7280",
                             "labelBoxBkgColor": "#1f2937",
                             "labelBoxBorderColor": "#4b5563",
                             "labelTextColor": "#f9fafb",
-                            "noteBkgColor": "#fbbf24",       # Amber notes
-                            "noteTextColor": "#000000",      # Black text on notes
+                            "noteBkgColor": "#fbbf24",        # Amber notes
+                            "noteTextColor": "#000000",
                             "noteBorderColor": "#f59e0b"
                         }
                     }
@@ -404,11 +457,14 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
                             )
                         ]
                     else:
-                        # For binary formats (PNG, PDF), just provide the saved file path
+                        # For binary formats (PNG, PDF), provide file path AND base64 (for n8n/Telegram integration)
+                        import base64
+                        base64_data = base64.b64encode(file_content).decode('utf-8')
+
                         return [
                             TextContent(
                                 type="text",
-                                text=f"Successfully generated {output_format.upper()} diagram!\n\nFile saved to: {permanent_path}\n\nFile size: {len(file_content)} bytes\n\nTo view the image, open the file at the path above in your image viewer or web browser."
+                                text=f"Successfully generated {output_format.upper()} diagram!\n\nFile saved to: {permanent_path}\nFile size: {len(file_content)} bytes\n\nBase64 data (for integration):\n{base64_data}"
                             )
                         ]
                 else:
